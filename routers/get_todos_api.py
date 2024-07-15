@@ -5,7 +5,7 @@ from fastapi_utils.cbv import cbv
 
 from sqlalchemy.orm import Session
 from database.database import Database
-from validations.models import ListTodoModel
+from validations.models import TodoModel, ListTodoModel
 
 from fastapi import (
     Path, status, 
@@ -27,7 +27,20 @@ class GetTodoApi:
         response_model=List[ListTodoModel],
     )
     async def get_todos_list(self, db: db_dependency):
-        return db.query(Todos).all()
+        todos = db.query(Todos).all()
+
+        return [
+            ListTodoModel(
+                id=todo.id,
+                data=TodoModel(
+                    title=todo.title,
+                    description=todo.description,
+                    priority=todo.priority,
+                    complete=todo.complete,
+                )
+            )
+            for todo in todos
+        ]
 
     @ROUTER.get(
         path='/list/{todo_id}',
@@ -35,10 +48,18 @@ class GetTodoApi:
         status_code=status.HTTP_200_OK,
     )
     async def get_todo_by_id(self, db: db_dependency, todo_id: int = Path(gt=0)):
-        todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
+        todo = db.query(Todos).filter(Todos.id == todo_id).first()
 
-        if todo_model is not None:
-            return todo_model
+        if todo is not None:
+            return ListTodoModel(
+                id=todo.id,
+                data=TodoModel(
+                    title=todo.title,
+                    description=todo.description,
+                    priority=todo.priority,
+                    complete=todo.complete,
+                )
+            )
         
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
