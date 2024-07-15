@@ -1,10 +1,10 @@
+from models import Todos
 from typing import Annotated
-from models.models import Todos
-from fastapi_utils.cbv import cbv
+from database import Database
 
+from fastapi_utils.cbv import cbv
 from sqlalchemy.orm import Session
-from database.database import Database
-from validations.models import TodoModel, ListTodoModel
+from validations import TodoModel, ListTodoModel
 
 from fastapi import (
     status, Depends,

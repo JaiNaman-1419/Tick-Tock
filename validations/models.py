@@ -1,4 +1,4 @@
-from pydantic import Field,BaseModel
+from pydantic import Field, BaseModel
 
 
 class TodoModel(BaseModel):
