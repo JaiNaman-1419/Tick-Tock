@@ -1,5 +1,5 @@
-from os.path import join as pathjoin
 from pathlib import Path
+from os.path import join as pathjoiner
 from sqlalchemy import create_engine
 from configparser import ConfigParser
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 config = ConfigParser()
 config_file_path = Path(__file__).resolve().parent.parent
-config_file = pathjoin(config_file_path, 'config', 'config.ini')
+config_file = pathjoiner(config_file_path, 'config', 'config.ini')
 config.read(config_file)
 
 
