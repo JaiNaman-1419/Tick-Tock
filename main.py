@@ -15,4 +15,5 @@ if not isfile(db_file):
     create_database()
 
 app.include_router(routers.get_todo_router)
+app.include_router(routers.edit_todo_router)
 app.include_router(routers.create_todo_router)
