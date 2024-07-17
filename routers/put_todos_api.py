@@ -9,7 +9,7 @@ from .get_todos_api import GetTodoApi
 from validations import TodoModel, ListTodoModel
 
 from fastapi import (
-    status, Depends,
+    Path, status, Depends,
     APIRouter, HTTPException
 )
 
@@ -28,9 +28,9 @@ class PutTodoApi:
     )
     async def edit_todos_list(
         self,
-        todo_id: int,
         db: db_dependency,
-        todo_request: TodoModel
+        todo_request: TodoModel,
+        todo_id: int = Path(gt=0),
     ):
         todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
         if todo_model is None:
