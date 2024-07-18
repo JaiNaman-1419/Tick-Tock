@@ -1,4 +1,5 @@
 from database import BASE
+from config import SqliteConfig
 from sqlalchemy import (
     Column, Integer,
     String, Boolean
@@ -6,7 +7,7 @@ from sqlalchemy import (
 
 
 class Todos(BASE):
-    __tablename__ = 'todos'
+    __tablename__ = SqliteConfig().get_todo_table_name
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
