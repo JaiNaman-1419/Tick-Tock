@@ -1,8 +1,10 @@
 from database import BASE
+from .users_model import Users
 from config import SqliteConfig
 from sqlalchemy import (
     Column, Integer,
-    String, Boolean
+    String, Boolean,
+    ForeignKey
 )
 
 
@@ -14,3 +16,4 @@ class Todos(BASE):
     description = Column(String)
     priority = Column(Integer)
     complete = Column(Boolean, default=False)
+    owner_id = Column(Integer, ForeignKey(f"{SqliteConfig().get_user_table_name}.id"))

@@ -1,6 +1,7 @@
-from models import models
 from .database import ENGINE
+from models import users_model, todos_models
 
 
 def create_database():
-    models.BASE.metadata.create_all(bind=ENGINE)
+    users_model.BASE.metadata.create_all(bind=ENGINE)
+    todos_models.BASE.metadata.create_all(bind=ENGINE)
