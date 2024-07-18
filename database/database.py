@@ -1,17 +1,10 @@
-from pathlib import Path
-from os.path import join as pathjoiner
+from config import SqliteConfig
 from sqlalchemy import create_engine
 from configparser import ConfigParser
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
-config = ConfigParser()
-config_file_path = Path(__file__).resolve().parent.parent
-config_file = pathjoiner(config_file_path, 'config', 'config.ini')
-config.read(config_file)
-
-
-SQLALCHEMY_DATABASE_URL = config['database']['database_url']
+SQLALCHEMY_DATABASE_URL = SqliteConfig().get_database_url
 
 ENGINE = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
 
