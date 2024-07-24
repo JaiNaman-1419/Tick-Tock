@@ -11,7 +11,7 @@ class BaseConfig:
 
 
 class SqliteConfig(BaseConfig):
-    
+
     @property
     def get_user_table_name(self):
         return self._CONFIG["sqlite"]["user_table_name"]
@@ -27,3 +27,10 @@ class SqliteConfig(BaseConfig):
     @property
     def get_database_file_name(self):
         return self._CONFIG["sqlite"]["database_file_name"]
+
+
+class JwtConfig(BaseConfig):
+
+    @property
+    def get_encoding_algorithm(self):
+        return self._CONFIG["jwt"]["algorithm"]
