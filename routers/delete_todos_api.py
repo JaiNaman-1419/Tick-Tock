@@ -3,6 +3,7 @@ from models import Todos
 from typing import Annotated
 from database import Database
 
+from .base_api import BaseApi
 from fastapi_utils.cbv import cbv
 from sqlalchemy.orm import Session
 
@@ -17,8 +18,7 @@ ROUTER = APIRouter(prefix='/todos', tags=["TODO"])
 
 
 @cbv(ROUTER)
-class DeleteTodoApi:
-    db_dependency = Annotated[Session, Depends(Database.get_db)]
+class DeleteTodoApi(BaseApi):
 
     @ROUTER.delete(
         path='/delete/{todo_id}',
@@ -26,17 +26,33 @@ class DeleteTodoApi:
     )
     async def delete_todo_item(
         self,
-        db: db_dependency,
+        db: BaseApi._DB_DEPENDENCY,
+        user: BaseApi._OAUTH_DEPENDENCY,
         todo_id: int = Path(gt=0)
     ):
-        todo = db.query(Todos).filter(Todos.id == todo_id).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication Failed :("
+            )
+
+        todo = db.query(Todos).filter(
+            Todos.id == todo_id
+        ).filter(
+            Todos.owner_id == user.get("id")
+        ).first()
+
         if todo is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Todo not found :("
             )
         
-        if db.query(Todos).filter(Todos.id == todo_id).delete():
+        if db.query(Todos).filter(
+                Todos.id == todo_id
+            ).filter(
+                Todos.owner_id == user.get("id")
+            ).delete():
             db.commit()
             return
         

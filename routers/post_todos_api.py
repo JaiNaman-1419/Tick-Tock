@@ -1,6 +1,6 @@
 from models import Todos
 from typing import Annotated
-from database import Database
+from .base_api import BaseApi
 
 from fastapi_utils.cbv import cbv
 from sqlalchemy.orm import Session
@@ -16,8 +16,7 @@ ROUTER = APIRouter(prefix="/todos", tags=["TODO"])
 
 
 @cbv(ROUTER)
-class PostTodoApi:
-    db_dependency = Annotated[Session, Depends(Database.get_db)]
+class PostTodoApi(BaseApi):
 
     @ROUTER.post(
         path="/create",
@@ -26,10 +25,17 @@ class PostTodoApi:
     )
     async def create_todos_list(
         self,
-        db: db_dependency,
         todo_request: TodoModel,
+        db: BaseApi._DB_DEPENDENCY,
+        user: BaseApi._OAUTH_DEPENDENCY,
     ):
-        todo_model = Todos(**todo_request.model_dump())
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication Failed :("
+            )
+
+        todo_model = Todos(**todo_request.model_dump(), owner_id=user.get("id"))
         
         db.add(todo_model)
         db.commit()

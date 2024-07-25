@@ -3,6 +3,7 @@ from models import Todos
 from typing import Annotated
 from database import Database
 
+from .base_api import BaseApi
 from fastapi_utils.cbv import cbv
 from sqlalchemy.orm import Session
 from validations import TodoModel, ListTodoModel
@@ -18,16 +19,25 @@ ROUTER = APIRouter(prefix='/todos', tags=["TODO"])
 
 
 @cbv(ROUTER)
-class GetTodoApi:
-    db_dependency = Annotated[Session, Depends(Database.get_db)]
+class GetTodoApi(BaseApi):
 
     @ROUTER.get(
         path='/list',
         status_code=status.HTTP_200_OK,
         response_model=List[ListTodoModel],
     )
-    async def get_todos_list(self, db: db_dependency):
-        todos = db.query(Todos).all()
+    async def get_todos_list(
+        self,
+        db: BaseApi._DB_DEPENDENCY,
+        user: BaseApi._OAUTH_DEPENDENCY
+    ):
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication Failed :("
+            )
+
+        todos = db.query(Todos).filter(Todos.owner_id == user.get("id")).all()
 
         return [
             ListTodoModel(
@@ -47,8 +57,24 @@ class GetTodoApi:
         response_model=ListTodoModel,
         status_code=status.HTTP_200_OK,
     )
-    async def get_todo_by_id(self, db: db_dependency, todo_id: int = Path(gt=0)):
-        todo = db.query(Todos).filter(Todos.id == todo_id).first()
+    async def get_todo_by_id(
+        self,
+        db: BaseApi._DB_DEPENDENCY,
+        user: BaseApi._OAUTH_DEPENDENCY,
+        todo_id: int = Path(gt=0)
+    ):
+
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication Failed :("
+            )
+
+        todo = db.query(Todos).filter(
+            Todos.id == todo_id
+        ).filter(
+            Todos.owner_id == user.get("id")
+        ).first()
 
         if todo is not None:
             return ListTodoModel(

@@ -2,6 +2,7 @@ from models import Todos
 from typing import Annotated
 from httpx import AsyncClient
 from database import Database
+from .base_api import BaseApi
 
 from fastapi_utils.cbv import cbv
 from sqlalchemy.orm import Session
@@ -18,8 +19,7 @@ ROUTER = APIRouter(prefix="/todos", tags=["TODO"])
 
 
 @cbv(ROUTER)
-class PutTodoApi:
-    db_dependency = Annotated[Session, Depends(Database.get_db)]
+class PutTodoApi(BaseApi):
 
     @ROUTER.put(
         path="/edit/{todo_id}",
@@ -28,11 +28,23 @@ class PutTodoApi:
     )
     async def edit_todos_list(
         self,
-        db: db_dependency,
         todo_request: TodoModel,
+        db: BaseApi._DB_DEPENDENCY,
+        user: BaseApi._OAUTH_DEPENDENCY,
         todo_id: int = Path(gt=0),
     ):
-        todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication Failed :("
+            )
+
+        todo_model = db.query(Todos).filter(
+            Todos.id == todo_id
+        ).filter(
+            Todos.owner_id == user.get("id")
+        ).first()
+
         if todo_model is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -47,4 +59,4 @@ class PutTodoApi:
         db.add(todo_model)
         db.commit()
 
-        return await GetTodoApi().get_todo_by_id(db, todo_id=todo_id)
+        return await GetTodoApi().get_todo_by_id(db, todo_id=todo_id, user=user)
