@@ -79,9 +79,16 @@ class Authentication:
         user = self.authenticate_user(form_data.username, form_data.password, db)
 
         if not user:
-            return "Authentication Failed"
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication Failed."
+            )
 
-        token = Token().create_access_token(username=user.username, user_id=user.id, expires_delta=timedelta(minutes=20 ))
+        token = Token().create_access_token(
+            username=user.username,
+            user_id=user.id,
+            expires_delta=timedelta(minutes=20)
+        )
         
         return {
             "access_token": token,

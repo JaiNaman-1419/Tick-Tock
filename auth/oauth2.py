@@ -15,7 +15,7 @@ load_dotenv()
 class Token:
     __SECRET_KEY = environ_var.get("SECRET_KEY")
     __ALGORITHM = JwtConfig().get_encoding_algorithm
-    __OAUTH2_BEARER = OAuth2PasswordBearer(tokenUrl="auth/token")
+    __OAUTH2_BEARER = OAuth2PasswordBearer(tokenUrl="auth/login")
 
     def create_access_token(self, username: str, user_id: int, expires_delta: timedelta):
         encode = {
