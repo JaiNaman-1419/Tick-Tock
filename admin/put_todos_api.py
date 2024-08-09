@@ -21,7 +21,7 @@ class PutTodoApi(BaseApi):
         user: BaseApi._OAUTH_DEPENDENCY,
         todo_id: int = Path(gt=0),
     ):
-        if user.get("role").lower() != "admin":
+        if not user.get("admin"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Forbidden access."

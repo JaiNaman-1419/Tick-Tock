@@ -23,7 +23,7 @@ class GetTodoApi(BaseApi):
         db: BaseApi._DB_DEPENDENCY,
         user: BaseApi._OAUTH_DEPENDENCY
     ):
-        if user.get("role").lower() != "admin":
+        if not user.get("admin"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Forbidden access."
@@ -56,7 +56,7 @@ class GetTodoApi(BaseApi):
         user: BaseApi._OAUTH_DEPENDENCY,
         todo_id: int = Path(gt=0)
     ):
-        if user.get("role").lower() != "admin":
+        if not user.get("admin"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Forbidden access."

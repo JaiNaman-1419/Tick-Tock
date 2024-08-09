@@ -1,6 +1,5 @@
 from config import SqliteConfig
 from sqlalchemy import create_engine
-from configparser import ConfigParser
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
