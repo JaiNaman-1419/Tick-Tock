@@ -1,16 +1,10 @@
-from typing import List
 from models import Todos
-from typing import Annotated
-from database import Database
-
 from .base_api import BaseApi
 from fastapi_utils.cbv import cbv
-from sqlalchemy.orm import Session
 
 from fastapi import (
     Path, status, 
-    APIRouter, Depends,
-    HTTPException
+    APIRouter, HTTPException
 )
 
 

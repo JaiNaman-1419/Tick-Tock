@@ -1,16 +1,11 @@
 from models import Todos
-from typing import Annotated
-from httpx import AsyncClient
-from database import Database
 from .base_api import BaseApi
-
 from fastapi_utils.cbv import cbv
-from sqlalchemy.orm import Session
 from .get_todos_api import GetTodoApi
 from validations import TodoModel, ListTodoModel
 
 from fastapi import (
-    Path, status, Depends,
+    Path, status,
     APIRouter, HTTPException
 )
 

@@ -1,15 +1,8 @@
 from models import Todos
-from typing import Annotated
 from .base_api import BaseApi
-
 from fastapi_utils.cbv import cbv
-from sqlalchemy.orm import Session
 from validations import TodoModel, ListTodoModel
-
-from fastapi import (
-    status, Depends,
-    APIRouter, HTTPException
-)
+from fastapi import status, APIRouter, HTTPException
 
 
 ROUTER = APIRouter(prefix="/todos", tags=["TODO"])

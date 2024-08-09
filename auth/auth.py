@@ -52,7 +52,7 @@ class Authentication:
                 first_name = create_user_request.first_name,
                 last_name = create_user_request.last_name,
                 hashed_password = self.BCRYPT_CONTEXT.hash(create_user_request.password),
-                role = create_user_request.role,
+                admin = create_user_request.admin,
                 is_active = True
             )
         
@@ -60,7 +60,7 @@ class Authentication:
             db.commit()
         
             return {
-                "msg": f"Hi, {create_user_model.username}!👋🏻\nLet's see how your day look like!😉"
+                "msg": f"Hi, {create_user_model.first_name}!👋🏻\nLet's see how your day look like!😉"
             }
 
         except Exception as e:
@@ -84,7 +84,7 @@ class Authentication:
         token = Token().create_access_token(
             username=user.username,
             user_id=user.id,
-            user_role=user.role,
+            admin=user.admin,
             expires_delta=timedelta(minutes=20)
         )
         

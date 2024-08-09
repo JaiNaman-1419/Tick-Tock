@@ -1,8 +1,5 @@
 from models import Todos
-from typing import Annotated
 from fastapi_utils.cbv import cbv
-
-from sqlalchemy.orm import Session
 from .base_api import BaseApi, ROUTER
 from validations import AdminTodoModel, AdminListTodoModel
 
@@ -27,7 +24,7 @@ class PostTodoApi(BaseApi):
         user: BaseApi._OAUTH_DEPENDENCY,
     ):
 
-        if user.get("role").lower() != "admin":
+        if not user.get("admin"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Forbidden access."
