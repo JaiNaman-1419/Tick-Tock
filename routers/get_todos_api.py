@@ -1,16 +1,9 @@
 from typing import List
 from models import Todos
-from .base_api import BaseApi
 from fastapi_utils.cbv import cbv
+from .base_api import BaseApi, ROUTER
+from fastapi import Path, status, HTTPException
 from validations import TodoModel, ListTodoModel
-
-from fastapi import (
-    Path, status, 
-    APIRouter, HTTPException
-)
-
-
-ROUTER = APIRouter(prefix='/todos', tags=["TODO"])
 
 
 @cbv(ROUTER)
