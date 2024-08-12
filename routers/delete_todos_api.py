@@ -1,14 +1,7 @@
 from models import Todos
-from .base_api import BaseApi
 from fastapi_utils.cbv import cbv
-
-from fastapi import (
-    Path, status, 
-    APIRouter, HTTPException
-)
-
-
-ROUTER = APIRouter(prefix='/todos', tags=["TODO"])
+from .base_api import BaseApi, ROUTER
+from fastapi import Path, status, HTTPException
 
 
 @cbv(ROUTER)
