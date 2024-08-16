@@ -4,7 +4,7 @@ from config import SqliteConfig
 from sqlalchemy import (
     Column, Integer,
     String, Boolean,
-    ForeignKey
+    ForeignKey, Text
 )
 
 
@@ -13,7 +13,7 @@ class Todos(BASE):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
-    description = Column(String)
+    description = Column(Text)
     priority = Column(Integer)
     complete = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey(f"{SqliteConfig().get_user_table_name}.id"))
