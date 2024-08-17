@@ -18,6 +18,6 @@ path = Path(__file__).resolve().parent
 #     create_database()
 
 
+app.include_router(auth.auth_router)
 app.include_router(todo_router)
 app.include_router(admin_router)
-app.include_router(auth.auth_router)

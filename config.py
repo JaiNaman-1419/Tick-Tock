@@ -13,6 +13,10 @@ class BaseConfig:
 class DatabaseConfig(BaseConfig):
 
     @property
+    def get_database_name(self):
+        return self._CONFIG["database"]["database_name"]
+
+    @property
     def get_user_table_name(self):
         return self._CONFIG["database"]["user_table_name"]
 
@@ -24,19 +28,23 @@ class DatabaseConfig(BaseConfig):
 class PostgresConfig(BaseConfig):
 
     @property
-    def get_host(self):
-        return self._CONFIG["postgres"]["host"]
-
-    @property
-    def get_database_name(self):
-        return self._CONFIG["postgres"]["database_name"]
-
-    @property
     def get_database_url(self):
+        host = self._CONFIG["postgres"]["host"]
         username = self._CONFIG["postgres"]["username"]
         password = self._CONFIG["postgres"]["password"]
 
-        return f"postgresql://{username}:{password}@{self.get_host}/{self.get_database_name}"
+        return f"postgresql://{username}:{password}@{host}/{DatabaseConfig().get_database_name}"
+
+
+class MySqlConfig(BaseConfig):
+
+    @property
+    def get_database_url(self):
+        host = self._CONFIG["mysql"]["host"]
+        username = self._CONFIG["mysql"]["username"]
+        password = self._CONFIG["mysql"]["password"]
+
+        return f"mysql+pymysql://{username}:{password}@{host}/{DatabaseConfig().get_database_name}"
 
 
 class SqliteConfig(BaseConfig):
