@@ -7,4 +7,4 @@ class UserModel(BaseModel):
     first_name: str
     last_name: str
     password: str = Field(min_length=8)
-    admin: bool
+    is_admin: bool

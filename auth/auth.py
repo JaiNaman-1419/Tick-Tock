@@ -52,7 +52,7 @@ class Authentication:
                 first_name = create_user_request.first_name,
                 last_name = create_user_request.last_name,
                 hashed_password = self.BCRYPT_CONTEXT.hash(create_user_request.password),
-                admin = create_user_request.admin,
+                is_admin = create_user_request.is_admin,
                 is_active = True
             )
         
@@ -64,8 +64,11 @@ class Authentication:
             }
 
         except Exception as e:
-            db.query(Users).filter(Users.username == create_user_model.username).delete()
-            db.commit()
+            # db.query(Users).filter(Users.username == create_user_model.username).delete()
+            # db.commit()
+            print("--------------------------------ERROR-----------------------------------")
+            print(e)
+            print("------------------------------------------------------------------------") 
 
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -84,7 +87,7 @@ class Authentication:
         token = Token().create_access_token(
             username=user.username,
             user_id=user.id,
-            admin=user.admin,
+            is_admin=user.is_admin,
             expires_delta=timedelta(minutes=20)
         )
         

@@ -24,7 +24,7 @@ class PostTodoApi(BaseApi):
         user: BaseApi._OAUTH_DEPENDENCY,
     ):
 
-        if not user.get("admin"):
+        if not user.get("is_admin"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Forbidden access."
