@@ -10,23 +10,44 @@ class BaseConfig:
     _CONFIG.read(__CONFIG_FILE)
 
 
-class SqliteConfig(BaseConfig):
+class DatabaseConfig(BaseConfig):
 
     @property
     def get_user_table_name(self):
-        return self._CONFIG["sqlite"]["user_table_name"]
+        return self._CONFIG["database"]["user_table_name"]
 
     @property
     def get_todo_table_name(self):
-        return self._CONFIG["sqlite"]["todo_table_name"]
+        return self._CONFIG["database"]["todo_table_name"]
+
+
+class PostgresConfig(BaseConfig):
+
+    @property
+    def get_host(self):
+        return self._CONFIG["postgres"]["host"]
+
+    @property
+    def get_database_name(self):
+        return self._CONFIG["postgres"]["database_name"]
+
+    @property
+    def get_database_url(self):
+        username = self._CONFIG["postgres"]["username"]
+        password = self._CONFIG["postgres"]["password"]
+
+        return f"postgresql://{username}:{password}@{self.get_host}/{self.get_database_name}"
+
+
+class SqliteConfig(BaseConfig):
 
     @property
     def get_database_url(self):
         return self._CONFIG["sqlite"]["database_url"]
 
     @property
-    def get_database_file_name(self):
-        return self._CONFIG["sqlite"]["database_file_name"]
+    def get_database_file(self):
+        return self._CONFIG["sqlite"]["database_file"]
 
 
 class JwtConfig(BaseConfig):

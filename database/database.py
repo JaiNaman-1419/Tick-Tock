@@ -1,11 +1,12 @@
-from config import SqliteConfig
+from config import PostgresConfig
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
-SQLALCHEMY_DATABASE_URL = SqliteConfig().get_database_url
+SQLALCHEMY_DATABASE_URL = PostgresConfig().get_database_url
 
-ENGINE = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
+ENGINE = create_engine(SQLALCHEMY_DATABASE_URL)
+# ENGINE = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})        # Engine for SQLite
 
 SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
 

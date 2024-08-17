@@ -1,5 +1,6 @@
 from database import BASE
-from config import SqliteConfig
+from config import DatabaseConfig
+
 from sqlalchemy import (
     Column, Integer,
     String, Boolean
@@ -7,7 +8,7 @@ from sqlalchemy import (
 
 
 class Users(BASE):
-    __tablename__ = SqliteConfig().get_user_table_name
+    __tablename__ = DatabaseConfig().get_user_table_name
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True)

@@ -19,12 +19,12 @@ class Token:
 
     def create_access_token(
         self, username: str, user_id: int,
-        admin: bool, expires_delta: timedelta
+        is_admin: bool, expires_delta: timedelta
     ):
         encode = {
             "sub": username,
             "id": user_id,
-            "admin": admin,
+            "is_admin": is_admin,
             "exp": datetime.now(timezone.utc) + expires_delta
         }
 
@@ -43,7 +43,7 @@ class Token:
 
             username: str = payload.get("sub")
             user_id: int = payload.get("id")
-            admin: str = payload.get("admin")
+            is_admin: str = payload.get("is_admin")
 
             if username is None or user_id is None:
                 self.get_user_exception()
@@ -51,7 +51,7 @@ class Token:
             return {
                 "username": username,   
                 "id": user_id,
-                "admin": admin
+                "is_admin": is_admin
             }
 
         except JWTError:
